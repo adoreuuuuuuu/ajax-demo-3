@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang = "zh-Hans">
+<head>
+	<meta charset="utf-8">
+	<title>我的Ajax Demo</title>
+</head>
+<body>
+	<button id=x>点我</button>
+	<script>
+		var page = 1
+		var requesting = false //默认没有请求
+		x.onclick = function(){
+			if(requesting){return}//如果现在正在请求，直接return,不让请求
+			requesting = true//如果没有请求，就请求
+			var xhr = new XMLHttpRequest()
+			xhr.open('GET','./page' + page + '.json')
+			xhr.onreadystatechange = function(){
+				if(xhr.readyState === 4 && xhr.status === 200){
+					requesting = false//请求回了之后就设置请求为false
+					var object = JSON.parse(xhr.responseText)
+					console.log(object)
+					if(object.hasNext){
+						page += 1
+					}else{
+						x.disabled = true
+					}
+				}
+			}
+			xhr.send()	
+		}
+		
+	</script>
+</body>
+</html>
